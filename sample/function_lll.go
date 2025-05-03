@@ -1,0 +1,70 @@
+package sample
+
+// This file contains a sample of a function with a long name and multiple parameters.
+type FunctionsInterfaceLLL interface {
+	// LongFunctionName is a function with a long name that takes multiple parameters.
+	LongFunctionName(aaaaaaaaaa string, bbbbbbbbbb string, cccccccccc string, dddddddddd string, eeeeeeeeee string) (string, error)
+	// LongFunctionNameNewLine is a function with a long name that takes multiple parameters.
+	LongFunctionNameNewLine(
+		aaaaaaaaaa string,
+		bbbbbbbbbb string,
+		cccccccccc string,
+		dddddddddd string,
+		eeeeeeeeee string,
+	) (string, error)
+	// Short is a function with a short name.
+	Short(a string, b string) error
+	// Empty is an empty function.
+	Empty()
+}
+
+// MethodLLL is a struct that implements the FunctionsInterfaceLLL interface.
+type MethodLLL struct{}
+
+// LongFunctionName is a method with a long name that takes multiple parameters.
+func (m *MethodLLL) LongFunctionName(aaaaaaaaaa string, bbbbbbbbbb string, cccccccccc string, dddddddddd string, eeeeeeeeee string) (string, error) {
+	return "", nil
+}
+
+// LongFunctionNameNewLine is a method with a long name that takes multiple parameters.
+func (m *MethodLLL) LongFunctionNameNewLine(
+	aaaaaaaaaa string,
+	bbbbbbbbbb string,
+	cccccccccc string,
+	dddddddddd string,
+	eeeeeeeeee string,
+) (string, error) {
+	return "", nil
+}
+
+// Short is a function with a short name.
+func (m *MethodLLL) Short(a string, b string) error {
+	return nil
+}
+
+// Empty is an empty method.
+func (m *MethodLLL) Empty() {}
+
+// LongFunctionName is a function with a long name that takes multiple parameters.
+func LongFunctionName(aaaaaaaaaa string, bbbbbbbbbb string, cccccccccc string, dddddddddd string, eeeeeeeeee string) (string, error) {
+	return "", nil
+}
+
+// LongFunctionNameNewLine is a function with a long name that takes multiple parameters.
+func LongFunctionNameNewLine(
+	aaaaaaaaaa string,
+	bbbbbbbbbb string,
+	cccccccccc string,
+	dddddddddd string,
+	eeeeeeeeee string,
+) (string, error) {
+	return "", nil
+}
+
+// Short is a function with a short name.
+func Short(a string, b string) error {
+	return nil
+}
+
+// Empty is an empty function.
+func Empty() {}
