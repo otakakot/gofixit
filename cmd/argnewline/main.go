@@ -33,7 +33,7 @@ func main() {
 			}
 
 			for i, param := range nn.Type.Params.List {
-				param.Names[0].Name = "\n\t\t" + param.Names[0].Name
+				param.Names[0].Name = "\n\t" + param.Names[0].Name
 				if i == len(nn.Type.Params.List)-1 {
 					if _, isEllipsis := param.Type.(*ast.Ellipsis); !isEllipsis {
 						switch t := param.Type.(type) {
@@ -48,6 +48,35 @@ func main() {
 								ident.Name += ",\n"
 							}
 						}
+					}
+				}
+			}
+
+			return true
+		case *ast.CallExpr:
+			println("call")
+
+			if !nn.Lparen.IsValid() || !nn.Rparen.IsValid() || len(nn.Args) == 0 {
+				return true
+			}
+
+			posL := fset.Position(nn.Lparen)
+			posR := fset.Position(nn.Rparen)
+
+			if posL.Line != posR.Line {
+				return true
+			}
+
+			if posR.Column <= 120 {
+				return true
+			}
+
+			for i, arg := range nn.Args {
+				switch a := arg.(type) {
+				case *ast.BasicLit:
+					a.Value = "\n\t" + a.Value
+					if i == len(nn.Args)-1 {
+						a.Value += ",\n"
 					}
 				}
 			}

@@ -138,7 +138,12 @@ func process(
 		return false, fmt.Errorf("format: %w", err)
 	}
 
-	if err := os.WriteFile(filename, formatted.Bytes(), 0644); err != nil {
+	res, err := format.Source(formatted.Bytes())
+	if err != nil {
+		return false, fmt.Errorf("format: %w", err)
+	}
+
+	if err := os.WriteFile(filename, res, 0644); err != nil {
 		return false, fmt.Errorf("write: %w", err)
 	}
 

@@ -68,3 +68,25 @@ func ShortFunc(a string, b string) error {
 
 // Empty is an empty function.
 func EmptyFunc() {}
+
+func LLL() {
+	res1, err1 := LongFunctionNameFunc("aaaaaaaaaaaaaaaaaaaa", "bbbbbbbbbbbbbbbbbbbb", "cccccccccccccccccccc", "dddddddddddddddddddd", "eeeeeeeeeeeeeeeeeeee")
+	if err1 != nil {
+		panic(err1)
+	}
+
+	println(res1)
+
+	res2, err2 := LongFunctionNameNewLineFunc(
+		"aaaaaaaaaaaaaaaaaaaa",
+		"bbbbbbbbbbbbbbbbbbbb",
+		"cccccccccccccccccccc",
+		"dddddddddddddddddddd",
+		"eeeeeeeeeeeeeeeeeeee",
+	)
+	if err2 != nil {
+		panic(err2)
+	}
+
+	println(res2)
+}
