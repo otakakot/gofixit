@@ -22,7 +22,7 @@ type FunctionsInterfaceLLL interface {
 type MethodLLL struct{}
 
 // LongFunctionName is a method with a long name that takes multiple parameters.
-func (m *MethodLLL) LongFunctionName(aaaaaaaaaa string, bbbbbbbbbb string, cccccccccc string, dddddddddd string, eeeeeeeeee string) (string, error) {
+func (m *MethodLLL) LongFunctionNameStruct(aaaaaaaaaa string, bbbbbbbbbb string, cccccccccc string, dddddddddd string, eeeeeeeeee string) (string, error) {
 	return "", nil
 }
 
@@ -46,12 +46,12 @@ func (m *MethodLLL) Short(a string, b string) error {
 func (m *MethodLLL) Empty() {}
 
 // LongFunctionName is a function with a long name that takes multiple parameters.
-func LongFunctionName(aaaaaaaaaa string, bbbbbbbbbb string, cccccccccc string, dddddddddd string, eeeeeeeeee string) (string, error) {
+func LongFunctionNameFunc(aaaaaaaaaa string, bbbbbbbbbb string, cccccccccc string, dddddddddd string, eeeeeeeeee string) (string, error) {
 	return "", nil
 }
 
 // LongFunctionNameNewLine is a function with a long name that takes multiple parameters.
-func LongFunctionNameNewLine(
+func LongFunctionNameNewLineFunc(
 	aaaaaaaaaa string,
 	bbbbbbbbbb string,
 	cccccccccc string,
@@ -62,9 +62,9 @@ func LongFunctionNameNewLine(
 }
 
 // Short is a function with a short name.
-func Short(a string, b string) error {
+func ShortFunc(a string, b string) error {
 	return nil
 }
 
 // Empty is an empty function.
-func Empty() {}
+func EmptyFunc() {}

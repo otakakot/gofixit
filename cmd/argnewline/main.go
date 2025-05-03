@@ -14,8 +14,44 @@ func main() {
 	gofixit.Run(func(node ast.Node, fset *token.FileSet) bool {
 		switch nn := node.(type) {
 		case *ast.FuncDecl:
-			return true
-		case *ast.CallExpr:
+			if nn.Type.Params == nil || len(nn.Type.Params.List) == 0 {
+				return true
+			}
+
+			lparen := nn.Type.Func
+			rparen := nn.Type.Results.End()
+
+			posL := fset.Position(lparen)
+			posR := fset.Position(rparen)
+
+			if posL.Line != posR.Line {
+				return true
+			}
+
+			if posR.Column <= 120 {
+				return true
+			}
+
+			for i, param := range nn.Type.Params.List {
+				param.Names[0].Name = "\n\t\t" + param.Names[0].Name
+				if i == len(nn.Type.Params.List)-1 {
+					if _, isEllipsis := param.Type.(*ast.Ellipsis); !isEllipsis {
+						switch t := param.Type.(type) {
+						case *ast.Ident:
+							t.Name += ",\n"
+						case *ast.SelectorExpr:
+							if ident, ok := t.X.(*ast.Ident); ok {
+								ident.Name += ",\n"
+							}
+						case *ast.StarExpr:
+							if ident, ok := t.X.(*ast.Ident); ok {
+								ident.Name += ",\n"
+							}
+						}
+					}
+				}
+			}
+
 			return true
 		case *ast.InterfaceType:
 			for _, field := range nn.Methods.List {
@@ -36,7 +72,9 @@ func main() {
 
 				buf := bytes.Buffer{}
 
-				printer.Fprint(&buf, fset, ftype)
+				if err := printer.Fprint(&buf, fset, ftype); err != nil {
+					return false
+				}
 
 				sig := strings.Replace(buf.String(), "func", field.Names[0].Name, 1)
 
