@@ -16,7 +16,7 @@ import (
 	"strings"
 )
 
-func Run(fn func(ast.Node) bool) {
+func Run(fn func(ast.Node, *token.FileSet) bool) {
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer cancel()
 
@@ -92,7 +92,7 @@ func collect(
 func process(
 	ctx context.Context,
 	filename string,
-	fn func(ast.Node) bool,
+	fn func(ast.Node, *token.FileSet) bool,
 ) (bool, error) {
 	if ctx.Err() != nil {
 		return false, ctx.Err()
@@ -119,10 +119,10 @@ func process(
 			return false
 		}
 
-		return fn(n)
+		return fn(n, fset)
 	})
 
-	var buf bytes.Buffer
+	buf := bytes.Buffer{}
 
 	if err := printer.Fprint(&buf, fset, astN); err != nil {
 		return false, fmt.Errorf("printer: %w", err)
@@ -132,7 +132,7 @@ func process(
 		return false, nil
 	}
 
-	var formatted bytes.Buffer
+	formatted := bytes.Buffer{}
 
 	if err := format.Node(&formatted, fset, astN); err != nil {
 		return false, fmt.Errorf("format: %w", err)
