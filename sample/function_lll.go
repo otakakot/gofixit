@@ -70,6 +70,10 @@ func ShortFunc(a string, b string) error {
 func EmptyFunc() {}
 
 func LLL() {
+	if err := ShortFunc("aaaa", "bbbb"); err != nil {
+		panic(err)
+	}
+
 	res1, err1 := LongFunctionNameFunc("aaaaaaaaaaaaaaaaaaaa", "bbbbbbbbbbbbbbbbbbbb", "cccccccccccccccccccc", "dddddddddddddddddddd", "eeeeeeeeeeeeeeeeeeee")
 	if err1 != nil {
 		panic(err1)
