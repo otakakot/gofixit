@@ -54,8 +54,6 @@ func main() {
 
 			return true
 		case *ast.CallExpr:
-			println("call")
-
 			if !nn.Lparen.IsValid() || !nn.Rparen.IsValid() || len(nn.Args) == 0 {
 				return true
 			}
