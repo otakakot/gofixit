@@ -101,6 +101,10 @@ func process(
 		panic(err)
 	}
 
+	if bytes.Contains(src, []byte("DO NOT EDIT.")) {
+		return false, nil
+	}
+
 	fset := token.NewFileSet()
 
 	node, err := parser.ParseFile(fset, filename, nil, parser.ParseComments)
@@ -122,7 +126,7 @@ func process(
 		needInsert := false
 		for _, c := range cg.List {
 			for line := range strings.SplitSeq(c.Text, "\n") {
-				if len(line) > 120-3 {
+				if len([]rune(line)) > 120-3 {
 					needInsert = true
 					break
 				}

@@ -94,6 +94,12 @@ func process(
 	filename string,
 	fn func(ast.Node, *token.FileSet) bool,
 ) (bool, error) {
+	fmt.Println("process:", filename)
+
+	if strings.HasSuffix(filename, "_test.go") {
+		return false, nil
+	}
+
 	if ctx.Err() != nil {
 		return false, ctx.Err()
 	}
@@ -146,8 +152,6 @@ func process(
 	if err := os.WriteFile(filename, res, 0644); err != nil {
 		return false, fmt.Errorf("write: %w", err)
 	}
-
-	fmt.Println("fixed:", filename)
 
 	return true, nil
 }

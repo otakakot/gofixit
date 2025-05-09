@@ -1,9 +1,15 @@
 package sample
 
+import "github.com/otakakot/gofixit/sample/domain"
+
+const cccccccccccccccccccc = "c"
+
 // This file contains a sample of a function with a long name and multiple parameters.
 type FunctionsInterfaceLLL interface {
 	// LongFunctionName is a function with a long name that takes multiple parameters.
 	LongFunctionName(aaaaaaaaaa string, bbbbbbbbbb string, cccccccccc string, dddddddddd string, eeeeeeeeee string) (string, error)
+	LongFunctionNameWithOriginal(aaaaaaaaaa string, bbbbbbbbbb string, cccccccccc string, ddddddddddd string, eeeeeeeeee domain.Original) error
+	LongFunctionNameWithPointer(aaaaaaaaaa []string, bbbbbbbbbb string, cccccccccc string, ddddddddddd string, eeeeeeeeee *domain.Original) error
 	// LongFunctionNameNewLine is a function with a long name that takes multiple parameters.
 	LongFunctionNameNewLine(
 		aaaaaaaaaa string,
@@ -46,7 +52,7 @@ func (m *MethodLLL) Short(a string, b string) error {
 func (m *MethodLLL) Empty() {}
 
 // LongFunctionName is a function with a long name that takes multiple parameters.
-func LongFunctionNameFunc(aaaaaaaaaa string, bbbbbbbbbb string, cccccccccc string, dddddddddd string, eeeeeeeeee string) (string, error) {
+func LongFunctionNameFunc(aaaaaaaaaa string, bbbbbbbbbb []string, cccccccccc string, dddddddddd string, eeeeeeeeee string) (string, error) {
 	return "", nil
 }
 
@@ -79,7 +85,7 @@ func LLL() {
 		panic(err)
 	}
 
-	res1, err1 := LongFunctionNameFunc("aaaaaaaaaaaaaaaaaaaa", "bbbbbbbbbbbbbbbbbbbb", "cccccccccccccccccccc", "dddddddddddddddddddd", "eeeeeeeeeeeeeeeeeeee")
+	res1, err1 := LongFunctionNameFunc("aaaaaaaaaaaaaaaaaaaa", []string{"bbbbbbbbbbbbbbbbbbbb"}, "cccccccccccccccccccc", "dddddddddddddddddddd", "eeeeeeeeeeeeeeeeeeee")
 	if err1 != nil {
 		panic(err1)
 	}
@@ -99,6 +105,81 @@ func LLL() {
 	}
 
 	println(res2)
+
+	dddddddddddddddddddd := "d"
+
+	res3, err3 := LongFunctionNameFunc("aaaaaaaaaaaaaaaaaaaa", []string{"bbbbbbbbbbbbbbbbbbbb"}, cccccccccccccccccccc, dddddddddddddddddddd, "eeeeeeeeeeeeeeeeeeee")
+	if err3 != nil {
+		panic(err3)
+	}
+
+	println(res3)
+
+	s := &S{
+		Arg: "sample",
+	}
+
+	res4, err4 := LongFunctionNameNewLineFunc(Var(), s.Method(), s.Arg, "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "eeeeeeeeeeeeeeeeeeee")
+	if err4 != nil {
+		panic(err4)
+	}
+
+	println(res4)
 }
 
 // 1234567890
+
+func Var() string {
+	return "sample"
+}
+
+type S struct {
+	Arg string
+}
+
+func (s *S) Method() string {
+	return "sample"
+}
+
+func (s *S) LongFunctionName(
+	a string,
+	b string,
+	c string,
+	d string,
+	e string,
+) (string, error) {
+	return "", nil
+}
+
+func (s *S) LongFunctionNameNewLine(
+	c string,
+	d string,
+	e string,
+) (string, error) {
+	res, err := s.LongFunctionName("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", c, d, e)
+	if err != nil {
+		return "", err
+	}
+
+	return res, nil
+}
+
+type FunctionsInterfaceLLL2 interface {
+	LongFunctionNameWithOriginal(s string, b string, c string, d string, e string) error
+}
+
+type FunctionsInterfaceLLL2Imp struct{}
+
+func (f *FunctionsInterfaceLLL2Imp) LongFunctionNameWithOriginal(s string, b string, c string, d string, e string) error {
+	return nil
+}
+
+type TTT struct {
+	lll FunctionsInterfaceLLL2
+}
+
+func (t *TTT) Func() {
+	if err := t.lll.LongFunctionNameWithOriginal("aaaaaaaaaaaaaaaaaaaa", "bbbbbbbbbbbbbbbbbbbb", "cccccccccccccccccccc", "dddddddddddddddddddd", "eeeeeeeeeeeeeeeeeeee"); err != nil {
+		panic(err)
+	}
+}

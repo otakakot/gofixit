@@ -18,8 +18,8 @@ func main() {
 				return true
 			}
 
-			lparen := nn.Type.Func
-			rparen := nn.Type.Results.End()
+			lparen := nn.Type.Pos()
+			rparen := nn.Type.End()
 
 			posL := fset.Position(lparen)
 			posR := fset.Position(rparen)
@@ -40,41 +40,22 @@ func main() {
 						case *ast.Ident:
 							t.Name += ",\n"
 						case *ast.SelectorExpr:
-							if ident, ok := t.X.(*ast.Ident); ok {
-								ident.Name += ",\n"
-							}
+							t.Sel.Name += ",\n"
 						case *ast.StarExpr:
-							if ident, ok := t.X.(*ast.Ident); ok {
-								ident.Name += ",\n"
+							switch xt := t.X.(type) {
+							case *ast.Ident:
+								xt.Name += ",\n"
+							case *ast.SelectorExpr:
+								xt.Sel.Name += ",\n"
+							}
+						case *ast.ArrayType:
+							switch elt := t.Elt.(type) {
+							case *ast.Ident:
+								elt.Name += ",\n"
+							case *ast.SelectorExpr:
+								elt.Sel.Name += ",\n"
 							}
 						}
-					}
-				}
-			}
-
-			return true
-		case *ast.CallExpr:
-			if !nn.Lparen.IsValid() || !nn.Rparen.IsValid() || len(nn.Args) == 0 {
-				return true
-			}
-
-			posL := fset.Position(nn.Lparen)
-			posR := fset.Position(nn.Rparen)
-
-			if posL.Line != posR.Line {
-				return true
-			}
-
-			if posR.Column <= 120 {
-				return true
-			}
-
-			for i, arg := range nn.Args {
-				switch a := arg.(type) {
-				case *ast.BasicLit:
-					a.Value = "\n\t" + a.Value
-					if i == len(nn.Args)-1 {
-						a.Value += ",\n"
 					}
 				}
 			}
@@ -117,14 +98,104 @@ func main() {
 							case *ast.Ident:
 								t.Name += ",\n"
 							case *ast.SelectorExpr:
-								if ident, ok := t.X.(*ast.Ident); ok {
-									ident.Name += ",\n"
-								}
+								t.Sel.Name += ",\n"
 							case *ast.StarExpr:
-								if ident, ok := t.X.(*ast.Ident); ok {
-									ident.Name += ",\n"
+								switch xt := t.X.(type) {
+								case *ast.Ident:
+									xt.Name += ",\n"
+								case *ast.SelectorExpr:
+									xt.Sel.Name += ",\n"
+								}
+							case *ast.ArrayType:
+								switch elt := t.Elt.(type) {
+								case *ast.Ident:
+									elt.Name += ",\n"
+								case *ast.SelectorExpr:
+									elt.Sel.Name += ",\n"
 								}
 							}
+						}
+					}
+				}
+			}
+
+			return true
+		case *ast.CallExpr:
+			if !nn.Lparen.IsValid() || !nn.Rparen.IsValid() || len(nn.Args) == 0 {
+				return true
+			}
+
+			posL := fset.Position(nn.Lparen)
+			posR := fset.Position(nn.Rparen)
+
+			if posL.Line != posR.Line {
+				return true
+			}
+
+			if posR.Column <= 120 {
+				return true
+			}
+
+			for i, arg := range nn.Args {
+				switch a := arg.(type) {
+				case *ast.BasicLit:
+					a.Value = "\n\t" + a.Value
+					if i == len(nn.Args)-1 {
+						a.Value += ",\n"
+					}
+				case *ast.Ident:
+					a.Name = "\n\t" + a.Name
+					if i == len(nn.Args)-1 {
+						a.Name += ",\n"
+					}
+				case *ast.SelectorExpr:
+					buf := bytes.Buffer{}
+					if err := printer.Fprint(&buf, fset, a); err == nil {
+						newSel := "\n\t" + buf.String()
+						nn.Args[i] = &ast.BasicLit{
+							Kind:  token.STRING,
+							Value: newSel,
+						}
+					}
+					if i == len(nn.Args)-1 {
+						if bl, ok := nn.Args[i].(*ast.BasicLit); ok {
+							bl.Value += ",\n"
+						}
+					}
+				case *ast.StarExpr:
+					switch xt := a.X.(type) {
+					case *ast.Ident:
+						xt.Name = "\n\t" + xt.Name
+						if i == len(nn.Args)-1 {
+							xt.Name += ",\n"
+						}
+					case *ast.SelectorExpr:
+						buf := bytes.Buffer{}
+						if err := printer.Fprint(&buf, fset, xt); err == nil {
+							newSel := "\n\t" + buf.String()
+							nn.Args[i] = &ast.BasicLit{
+								Kind:  token.STRING,
+								Value: newSel,
+							}
+						}
+						if i == len(nn.Args)-1 {
+							if bl, ok := nn.Args[i].(*ast.BasicLit); ok {
+								bl.Value += ",\n"
+							}
+						}
+					}
+				case *ast.CallExpr:
+					buf := bytes.Buffer{}
+					if err := printer.Fprint(&buf, fset, a); err == nil {
+						newCall := "\n\t" + buf.String()
+						nn.Args[i] = &ast.BasicLit{
+							Kind:  token.STRING,
+							Value: newCall,
+						}
+					}
+					if i == len(nn.Args)-1 {
+						if bl, ok := nn.Args[i].(*ast.BasicLit); ok {
+							bl.Value += ",\n"
 						}
 					}
 				}
